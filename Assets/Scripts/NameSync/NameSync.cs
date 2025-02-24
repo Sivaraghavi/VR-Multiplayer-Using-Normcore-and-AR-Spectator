@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Normal.Realtime;
 using TMPro;
@@ -7,8 +5,9 @@ using System;
 
 namespace Name
 {
-    public class NameSync: RealtimeComponent<NameSyncModel> {
-        [SerializeField] private TextMeshPro _textMeshPro;
+    public class NameSync : RealtimeComponent<NameSyncModel>
+    {
+        [SerializeField] private TextMeshProUGUI _textMeshPro;
 
         protected override void OnRealtimeModelReplaced(NameSyncModel previousModel, NameSyncModel currentModel)
         {
@@ -21,7 +20,7 @@ namespace Name
 
             if (currentModel != null)
             {
-                if(currentModel.isFreshModel)
+                if (currentModel.isFreshModel)
                 {
                     currentModel.name = _textMeshPro.text;
                 }
@@ -34,7 +33,14 @@ namespace Name
 
         private void UpdateName()
         {
-            _textMeshPro.text = model.name;
+            if (_textMeshPro != null)
+            {
+                _textMeshPro.text = model.name;
+            }
+            else
+            {
+                Debug.LogError("_textMeshPro is not assigned");
+            }
         }
 
         private void NameDidChange(NameSyncModel model, string value)
@@ -46,6 +52,13 @@ namespace Name
         {
             model.name = name;
         }
-    }
 
+        private void Awake()
+        {
+            if (_textMeshPro == null)
+            {
+                Debug.LogError("_textMeshPro is not assigned in the Inspector");
+            }
+        }
+    }
 }
